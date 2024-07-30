@@ -71,10 +71,10 @@ bool RMGVertexFromFile::GenerateVertex(G4ThreeVector& vertex) {
 
 void RMGVertexFromFile::DefineCommands() {
 
-  fMessenger = std::make_unique<G4GenericMessenger>(this, "/RMG/Confinement/FromFile/",
+  fMessenger = std::make_unique<G4GenericMessenger>(this, "/RMG/Generator/Confinement/",
       "Commands for controlling reading event vertex positions from file");
 
-  fMessenger->DeclareMethod("FileName", &RMGVertexFromFile::OpenFile)
+  fMessenger->DeclareMethod("VertexFileName", &RMGVertexFromFile::OpenFile)
       .SetGuidance("Set name of the file containing vertex positions. See the documentation for a "
                    "specification of the format.")
       .SetParameterName("filename", false)

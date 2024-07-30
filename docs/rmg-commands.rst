@@ -14,7 +14,6 @@ Command directory path : /RMG/
     * */RMG/Processes/*: ``Commands for controlling physics processes``
     * */RMG/Geometry/*: ``Commands for controlling geometry definitions``
     * */RMG/Generator/*: ``Commands for controlling generators``
-    * */RMG/Confinement/*: ``...Title not available...``
 
 Command directory path : /RMG/Manager/
 --------------------------------------
@@ -750,6 +749,7 @@ Commands for controlling primary confinement
     * *SamplingMode*: ``Select sampling mode for volume confinement``
     * *MaxSamplingTrials*: ``Set maximum number of attempts for sampling primary positions in a volume``
     * *ForceContainmentCheck*: ``If true (or omitted argument), perform a containment check even after sampling from a natively sampleable object. This is only an extra sanity check that does not alter the behaviour.``
+    * *VertexFileName*: ``Set name of the file containing vertex positions. See the documentation for a specification of the format.``
 
 Command /RMG/Generator/Confinement/Reset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -793,6 +793,15 @@ If true (or omitted argument), perform a containment check even after sampling f
 * **Parameter**: ``flag``
     * **Parameter type**: ``b``
     * **Omittable**: ``True``
+
+Command /RMG/Generator/Confinement/VertexFileName
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Set name of the file containing vertex positions. See the documentation for a specification of the format.
+
+* **Parameter**: ``filename``
+    * **Parameter type**: ``s``
+    * **Omittable**: ``False``
 
 Command directory path : /RMG/Generator/Confinement/Physical/
 -------------------------------------------------------------
@@ -1059,26 +1068,3 @@ Set Z length
     * **Omittable**: ``True``
     * **Default value**: ``cm``
     * **Candidates**: ``pc km m cm mm um nm Ang fm parsec kilometer meter centimeter millimeter micrometer nanometer angstrom fermi``
-
-Command directory path : /RMG/Confinement/
-------------------------------------------
-
-* **Sub-directories**:
-    * */RMG/Confinement/FromFile/*: ``Commands for controlling reading event vertex positions from file``
-
-Command directory path : /RMG/Confinement/FromFile/
----------------------------------------------------
-
-Commands for controlling reading event vertex positions from file
-
-* **Commands**:
-    * *FileName*: ``Set name of the file containing vertex positions. See the documentation for a specification of the format.``
-
-Command /RMG/Confinement/FromFile/FileName
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Set name of the file containing vertex positions. See the documentation for a specification of the format.
-
-* **Parameter**: ``filename``
-    * **Parameter type**: ``s``
-    * **Omittable**: ``False``
