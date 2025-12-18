@@ -5,7 +5,6 @@
 :::{todo}
 
 - examples
-- tricks for vertex visualization
 
 :::
 
@@ -167,12 +166,34 @@ All sampling modes described above are available, with few notes/limitations:
   to sample the candidate surface vertices from must be set with
   <project:../rmg-commands.md#rmggeneratorconfinementfirstsamplingvolume>. This
   is not optional.
+- The value of
+  <project:../rmg-commands.md#rmggeneratorconfinementsurfacesamplemaxintersections>
+  should be set to the maximum number of times a line can intersect with the
+  surface of the volume. For example this is 2 for a sphere or cube. The
+  supplied value can be an overestimate. For slight overestimates this is comes
+  with a small but usually acceptable performance cost, however very large
+  values can significantly slow down the simulation.
 
 ## Vertices from external files
 
 For more complicated vertex confinement _remage_ supports the possibility to
 read in directly event primary positions from input files, as described in
 {ref}`manual-input-vertex`.
+
+## Visualization
+
+You can use `legend-pygeom-vis` from the
+[_legend-pygeom-tools_](https://github.com/legend-exp/legend-pygeom-tools)
+package to visualize the simulated vertices your generated output files:
+
+```console
+$ remage -o {RMG_OUTPUT_FILE} -g {GDML_FILE} -- ...
+$ legend-pygeom-vis --add_points {RMG_OUTPUT_FILE} {GDML_FILE}
+```
+
+If you want to only show the vertices without the run-time overhead of actually
+simulating any physics, you could consider switching to generating only
+geantinos instead of your usual physics.
 
 [^1]:
     J. A. Detwiler, R. Henning, R. A. Johnson and M. G. Marino, in IEEE
