@@ -121,6 +121,10 @@ def _run_remage_cpp(
     )
     ipc_thread.start()
 
+    if len(proc) > 1:
+        watch_thread = threading.Thread(target=watch_thread_fn, args=(proc,))
+        watch_thread.start()
+
     # wait for C++ executable to finish.
     for p in proc:
         p.wait()
@@ -131,12 +135,47 @@ def _run_remage_cpp(
 
     # close the IPC pipe and end IPC handling.
     ipc_thread.join()
+    if len(proc) > 1:
+        watch_thread.join()
 
     ec = [128 - p.returncode if p.returncode < 0 else p.returncode for p in proc]
     termsig = [
         signal.Signals(-p.returncode) if p.returncode < 0 else None for p in proc
     ]
     return ec, termsig, IpcResult(unhandled_ipc_messages)
+
+
+def watch_thread_fn(proc: list[subprocess.Popen]) -> None:
+    """Read and handle IPC messages coming from ``remage-cpp``.
+
+    .. important ::
+        This function runs in a dedicated thread in
+        :func:`remage.cli._run_remage_cpp` and should not be called directly by
+        the user.
+
+    Parameters
+    ----------
+    proc
+        The subprocess(es) running ``remage-cpp``.
+    """
+    if len(proc) <= 1:
+        return
+
+    try:
+        while True:
+            os.waitid(os.P_ALL, 0, os.WEXITED | os.WNOWAIT)
+
+            # determine which process exited. This calls wait again (I guess)
+            for p in proc:
+                p.poll()
+                if p.returncode is not None and p.returncode < 0:
+                    for p2 in proc:
+                        if p2.returncode is None:
+                            p2.send_signal(signal.SIGTERM)
+                    break
+    except ChildProcessError:
+        # error ECHILD means that we have no children left to wait for.
+        pass
 
 
 def _cleanup_tmp_files(ipc_info: IpcResult) -> None:
