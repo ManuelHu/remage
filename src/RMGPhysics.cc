@@ -383,6 +383,7 @@ void RMGPhysics::ConstructOptical() {
   absorption_proc->SetVerboseLevel(G4VModularPhysicsList::verboseLevel);
   boundary_proc->SetVerboseLevel(G4VModularPhysicsList::verboseLevel);
   wls_proc->SetVerboseLevel(G4VModularPhysicsList::verboseLevel);
+  cerenkov_proc->SetVerboseLevel(G4VModularPhysicsList::verboseLevel);
 
   if (fUseOpticalCustomWLS) {
     auto wls_proc_wrapped = new RMGOpWLSProcess();
@@ -412,6 +413,11 @@ void RMGPhysics::ConstructOptical() {
       proc_manager->AddDiscreteProcess(boundary_proc);
       proc_manager->AddDiscreteProcess(rayleigh_scatt_proc);
       proc_manager->AddDiscreteProcess(wls_proc);
+
+#if G4VERSION_NUMBER < 1140
+      // this was added by default in G4 11.4.
+      proc_manager->SetProcessOrderingToLast(boundary_proc, G4ProcessVectorDoItIndex::idxPostStep);
+#endif
     }
   }
 }
