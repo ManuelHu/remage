@@ -181,14 +181,20 @@ else()
   endif()
 endif()
 
-# obtain the fmt library
+# obtain the fmt/CLI11/magic_enum libraries. Each is vendored via FetchContent,
+# but FIND_PACKAGE_ARGS lets FetchContent_MakeAvailable prefer a suitable system
+# installation if one is present. This avoids target-name clashes with system
+# installs and lets users pick the source via the standard knobs, e.g.
+# -DFETCHCONTENT_TRY_FIND_PACKAGE_MODE=NEVER to always use the vendored clone or
+# -DCMAKE_REQUIRE_FIND_PACKAGE_fmt=ON to require the system one.
 include(FetchContent)
 FetchContent_Declare(
   fmt
   GIT_REPOSITORY https://github.com/fmtlib/fmt
-  GIT_TAG 40626af88bd7df9a5fb80be7b25ac85b122d6c21) # 11.2.0
+  GIT_TAG 40626af88bd7df9a5fb80be7b25ac85b122d6c21 # 11.2.0
+  FIND_PACKAGE_ARGS 11.2.0 NAMES fmt)
 FetchContent_MakeAvailable(fmt)
-# fmt is a static lib, make it linkable into libremage.
+# when vendored, fmt is a static lib, make it linkable into libremage.
 # it might also be provided by a system installation, so skip this call in that case.
 if(TARGET fmt)
   set_target_properties(fmt PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
@@ -198,14 +204,16 @@ endif()
 FetchContent_Declare(
   CLI11
   GIT_REPOSITORY https://github.com/CLIUtils/CLI11
-  GIT_TAG 4160d25) # 2.5.0
-FetchContent_MakeAvailable(cli11)
+  GIT_TAG 4160d25 # 2.5.0
+  FIND_PACKAGE_ARGS 2.5.0 NAMES CLI11)
+FetchContent_MakeAvailable(CLI11)
 
 # obtain magic_enum
 FetchContent_Declare(
   magic_enum
   GIT_REPOSITORY https://github.com/Neargye/magic_enum
-  GIT_TAG e046b69) # 0.9.7
+  GIT_TAG e046b69 # 0.9.7
+  FIND_PACKAGE_ARGS 0.9.7 NAMES magic_enum)
 FetchContent_MakeAvailable(magic_enum)
 
 # skip clang-tidy checks. Content downloaded via FetchContent is automatically included
