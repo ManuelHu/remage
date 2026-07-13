@@ -87,6 +87,19 @@ dependencies.
 
 ```
 
+A handful of small C++ libraries (fmt, CLI11 and magic_enum) are pulled in
+automatically at configure time via CMake's `FetchContent`, so you normally do
+not need to install them yourself. If a suitable version is already installed on
+your system, remage will pick it up instead of downloading a private copy. You
+can steer this behaviour with the standard CMake options, for example:
+
+```console
+$ # always use the vendored (downloaded) copies, ignoring system installs
+$ cmake -DFETCHCONTENT_TRY_FIND_PACKAGE_MODE=NEVER ..
+$ # require the system installation of fmt (fail if it is not found)
+$ cmake -DCMAKE_REQUIRE_FIND_PACKAGE_fmt=ON ..
+```
+
 ### Building
 
 The build system is based on CMake.
